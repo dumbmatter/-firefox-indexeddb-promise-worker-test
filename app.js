@@ -1,4 +1,4 @@
-var immediate = require('immediate');
+var Promise = require('lie');
 
 var openRequest = indexedDB.open('firefox-indexeddb-promise-worker-test');
 
@@ -11,22 +11,17 @@ openRequest.onupgradeneeded = function() {
     store.put({id: 3});
 };
 
-function get(tx, id, cb) {
-    immediate(function () {
+function get(tx, id) {
+    return new Promise(function (resolve, reject) {
         var req = tx.objectStore('whatever').get(id);
         req.onsuccess = function (e) {
             console.log('got', e.target.result);
-            if (cb) {
-                cb(null, e.target.result);
-            }
+            resolve(e.target.result);
         };
         req.onerror = function (e) {
-            console.error(e.target.error);
-            if (cb) {
-                cb(e.target.error);
-            }
+            reject(e.target.error);
         };
-    });
+    })
 }
 
 openRequest.onsuccess = function() {
@@ -37,7 +32,9 @@ openRequest.onsuccess = function() {
         console.log('tx complete');
     };
 
-    get(tx, 1, function () {
-        get(tx, 2);
+    get(tx, 1).then(function () {
+        return get(tx, 2);
+    }).catch(function (err) {
+        console.error(err);
     });
 };
