@@ -1,4 +1,4 @@
-var Promise = require('lie');
+var Dexie = require('dexie');
 
 var openRequest = indexedDB.open('firefox-indexeddb-promise-worker-test');
 
@@ -12,7 +12,7 @@ openRequest.onupgradeneeded = function() {
 };
 
 function get(tx, id) {
-    return new Promise(function (resolve, reject) {
+    return new Dexie.Promise(function (resolve, reject) {
         var req = tx.objectStore('whatever').get(id);
         req.onsuccess = function (e) {
             console.log('got', e.target.result);

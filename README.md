@@ -11,7 +11,7 @@ Go to http://localhost:3000/in-browser.html in your browser and open the JS cons
     app.js:19 got Object {id: 2}
     app.js:38 tx complete
 
-But go to http://localhost:3000/in-worker.html and the same code will run inside a Web Worker, sadly producing this output:
+But go to http://localhost:3000/in-worker.html and the same code will run inside a Web Worker, sadly producing something like:
 
     app.js:17 Uncaught DOMException: Failed to execute 'get' on 'IDBObjectStore': The transaction is not active.
         at http://localhost:3000/app.js:17:46
